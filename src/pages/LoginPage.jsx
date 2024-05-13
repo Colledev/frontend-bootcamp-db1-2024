@@ -1,16 +1,12 @@
-import {
-  Button, Card,
-  Col, Form, Layout, Row,
-  Typography, Modal,
-} from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import axios from 'axios';
+import { Button, Card, Col, Form, Layout, Row, Typography, Modal } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
-import Logo from '../assets/logo-db1-group.png';
-import InputText from '../components/InputText';
-import LocalStorageHelper from '../helpers/localstorage-helper';
-import { validateEmail, validatePassword } from '../validatiors/usuarios';
+import Logo from "../assets/logo-db1-group.png";
+import InputText from "../components/InputText";
+import LocalStorageHelper from "../helpers/localstorage-helper";
+import { validateEmail, validatePassword } from "../validatiors/usuarios";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -28,17 +24,27 @@ function LoginPage() {
 
       if (!email?.valid || !senha?.valid) return;
 
-      // TODO: implementar
+      const response = await axios.post("/users/login", {
+        email: email.value,
+        password: senha.value,
+      });
+
+      const { token } = response.data;
+
+      LocalStorageHelper.setToken(token);
+
+      navigate("/");
     } catch (error) {
       console.warn(error);
       const { response } = error;
       if (response?.status === 401) {
         Modal.error({
-          title: 'Usuário ou senha inválidos',
+          title: "Usuário ou senha inválidos",
         });
       } else {
         Modal.error({
-          title: 'Não foi possível entrar no momento, tente novamente mais tarde.',
+          title:
+            "Não foi possível entrar no momento, tente novamente mais tarde.",
         });
       }
     } finally {
@@ -57,24 +63,17 @@ function LoginPage() {
 
   return (
     <Content>
-      <Row
-        justify="center"
-      >
-        <Col xs={24} sl={14} md={12} lg={10} xl={8}>
+      <Row justify="center">
+        <Col xs={24} sm={14} md={12} lg={10} xl={8}>
           <Card style={{ margin: 24 }}>
-
-            <div style={{ textAlign: 'center' }}>
-              <img
-                src={Logo}
-                alt="Logotipo"
-                style={{ maxWidth: '80%' }}
-              />
+            <div style={{ textAlign: "center" }}>
+              <img src={Logo} alt="Logotipo" style={{ maxWidth: "80%" }} />
             </div>
 
             <Title
               level={3}
               type="secondary"
-              style={{ textAlign: 'center', marginTop: 8 }}
+              style={{ textAlign: "center", marginTop: 8 }}
             >
               Faça login para continuar
             </Title>
@@ -117,8 +116,7 @@ function LoginPage() {
             <br />
 
             <Typography.Text>
-              Não possui conta?
-              {' '}
+              Não possui conta?{" "}
               <Link
                 to="/subscription"
                 className="ant-btn ant-btn-link ant-btn-lg ant-btn-block"
@@ -126,7 +124,6 @@ function LoginPage() {
                 Cadastre-se
               </Link>
             </Typography.Text>
-
           </Card>
         </Col>
       </Row>

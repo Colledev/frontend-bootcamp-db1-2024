@@ -1,15 +1,15 @@
-import {
-  Button, Card,
-  Col, Form, Layout, Row,
-  Typography, Modal,
-} from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
-import { useCallback, useState } from 'react';
-import axios from 'axios';
+import { Button, Card, Col, Form, Layout, Row, Typography, Modal } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useState } from "react";
+import axios from "axios";
 
-import Logo from '../assets/logo-db1-group.png';
-import InputText from '../components/InputText';
-import { validateEmail, validateName, validatePassword } from '../validatiors/usuarios';
+import Logo from "../assets/logo-db1-group.png";
+import InputText from "../components/InputText";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from "../validatiors/usuarios";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -37,34 +37,31 @@ function SubscriptionPage() {
     }
   }, [formValues, navigate]);
 
-  const handleInputChange = useCallback((event) => {
-    const { name, input } = event;
+  const handleInputChange = useCallback(
+    (event) => {
+      const { name, input } = event;
 
-    setFormValues({
-      ...formValues,
-      [name]: input,
-    });
-  }, [formValues]);
+      setFormValues({
+        ...formValues,
+        [name]: input,
+      });
+    },
+    [formValues]
+  );
 
   return (
     <Content>
-      <Row
-        justify="center"
-      >
-        <Col xs={24} sl={14} md={12} lg={10} xl={8}>
+      <Row justify="center">
+        <Col xs={24} sm={14} md={12} lg={10} xl={8}>
           <Card style={{ margin: 24 }}>
-            <div style={{ textAlign: 'center' }}>
-              <img
-                src={Logo}
-                alt="Logotipo"
-                style={{ maxWidth: '80%' }}
-              />
+            <div style={{ textAlign: "center" }}>
+              <img src={Logo} alt="Logotipo" style={{ maxWidth: "80%" }} />
             </div>
 
             <Title
               level={3}
               type="secondary"
-              style={{ textAlign: 'center', marginTop: 8 }}
+              style={{ textAlign: "center", marginTop: 8 }}
             >
               Cadastre-se
             </Title>
@@ -119,8 +116,7 @@ function SubscriptionPage() {
             <br />
 
             <Typography.Text>
-              Voltar para o
-              {' '}
+              Voltar para o{" "}
               <Link
                 to="/login"
                 className="ant-btn ant-btn-link ant-btn-lg ant-btn-block"
