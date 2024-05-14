@@ -63,19 +63,30 @@ function TaskCreatePage() {
 
       if (!titulo?.valid) return;
 
-      await axios.post("/tasks", {
-        title: titulo.value,
-      });
-
-      notification.success({
-        message: "Tarefa cadastrada com sucesso.",
-      });
+      if (taskId) {
+        // editando
+        await axios.patch(`/tasks/${taskId}`, {
+          title: titulo.value,
+        });
+        notification.success({
+          message: "Tarefa editada com sucesso!",
+        });
+      } else {
+        // cadastrando
+        await axios.post("/tasks", {
+          title: titulo.value,
+        });
+        notification.success({
+          message: "Tarefa criada com sucesso!",
+        });
+      }
 
       navigate("/");
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: "Não foi cadastrar-se, tente novamente mais tarde.",
+        title:
+          "Não foi possível cadastrar a tarefa, tente novamente mais tarde.",
       });
     } finally {
       setLoading(false);
