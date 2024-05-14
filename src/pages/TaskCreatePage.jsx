@@ -56,7 +56,15 @@ function TaskCreatePage() {
 
       if (!titulo?.valid) return;
 
-      // TODO: implementar
+      await axios.post("/tasks", {
+        title: titulo.value,
+      });
+
+      notification.success({
+        message: "Tarefa cadastrada com sucesso.",
+      });
+
+      navigate("/");
     } catch (error) {
       console.warn(error);
       Modal.error({
