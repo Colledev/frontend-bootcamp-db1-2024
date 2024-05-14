@@ -1,12 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
-  Layout, Row, Col, Table, Modal, Button, Space, Popconfirm,
-} from 'antd';
-import axios from 'axios';
+  Layout,
+  Row,
+  Col,
+  Table,
+  Modal,
+  Button,
+  Space,
+  Popconfirm,
+} from "antd";
+import axios from "axios";
 import {
-  BorderOutlined, CheckOutlined, DeleteOutlined, FormOutlined,
-} from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+  BorderOutlined,
+  CheckOutlined,
+  DeleteOutlined,
+  FormOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Content } = Layout;
 const { Column } = Table;
@@ -20,11 +30,14 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      const response = await axios.get("/tasks");
+
+      setTasks(response.data);
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi possível carregar suas tarefas, tente novamente mais tarde.',
+        title:
+          "Não foi possível carregar suas tarefas, tente novamente mais tarde.",
       });
     } finally {
       setLoading(false);
@@ -35,15 +48,19 @@ function TaskListPage() {
     requestTasks();
   }, []);
 
-  const completeTask = async (taskId, concluida) => {
+  const completeTask = async (taskId, concluded) => {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      await axios.put(
+        concluded ? `/tasks/${taskId}/concluded` : `/tasks/${taskId}/pending`
+      );
+
+      await requestTasks();
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi possível processar, tente novamente mais tarde.',
+        title: "Não foi possível processar, tente novamente mais tarde.",
       });
     } finally {
       setLoading(false);
@@ -54,11 +71,13 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      await axios.delete(`/tasks/${taskId}`);
+
+      await requestTasks();
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi possível processar, tente novamente mais tarde.',
+        title: "Não foi possível processar, tente novamente mais tarde.",
       });
     } finally {
       setLoading(false);
@@ -90,9 +109,7 @@ function TaskListPage() {
           removeTask(task.id);
         }}
       >
-        <Button
-          icon={<DeleteOutlined />}
-        />
+        <Button icon={<DeleteOutlined />} />
       </Popconfirm>
     </Button.Group>
   );
@@ -100,50 +117,36 @@ function TaskListPage() {
   return (
     <Content>
       <br />
-      <Space direction="vertical" style={{ display: 'flex' }}>
-
+      <Space direction="vertical" style={{ display: "flex" }}>
         <Row justify="center">
           <Col span={23}>
-
             <Table
               dataSource={tasks}
               pagination={false}
               loading={loading}
               rowKey={(task) => task.id}
             >
-              <Column
-                title="ID"
-                dataIndex="id"
-                key="id"
-              />
-              <Column
-                title="Título"
-                dataIndex="titulo"
-                key="titulo"
-              />
+              <Column title="ID" dataIndex="id" key="id" />
+              <Column title="Título" dataIndex="title" key="title" />
               <Column
                 title="Criada em"
-                dataIndex="criado_em"
-                key="criado_em"
+                dataIndex="created_at"
+                key="created_at"
                 render={(data) => new Date(data).toLocaleString()}
               />
               <Column
                 title="Atualizada em"
-                dataIndex="atualizado_em"
-                key="atualizado_em"
+                dataIndex="updated_at"
+                key="updated_at"
                 render={(data) => new Date(data).toLocaleString()}
               />
               <Column
                 title="Concluída"
-                dataIndex="concluida"
-                key="concluida"
+                dataIndex="concluded"
+                key="concluded"
                 render={renderCompletedTask}
               />
-              <Column
-                title="Ações"
-                key="acoes"
-                render={renderActions}
-              />
+              <Column title="Ações" key="actions" render={renderActions} />
             </Table>
           </Col>
         </Row>
