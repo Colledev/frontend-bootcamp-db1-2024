@@ -29,7 +29,14 @@ function TaskCreatePage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      const response = await axios.get(`/tasks/${taskId}`);
+
+      setFormValues({
+        titulo: {
+          value: response.data.title,
+          valid: true,
+        },
+      });
     } catch (error) {
       console.warn(error);
       Modal.error({
